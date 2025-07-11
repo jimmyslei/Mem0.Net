@@ -39,7 +39,7 @@ public interface IMem0Client
     /// </summary>
     /// <param name="memoryId">ID of the memory to retrieve</param>
     /// <returns>Memory details</returns>
-    Task<MemoryInfoResponse?> GetMemoryAsync(string memoryId);
+    Task<MemoryInfoResponse?> GetMemoryByIdAsync(string memoryId);
 
     /// <summary>
     /// Delete a memory by ID
@@ -48,5 +48,29 @@ public interface IMem0Client
     /// <returns>True if deletion was successful</returns>
     Task<bool> DeleteMemoryAsync(string memoryId);
 
+    /// <summary>
+    /// Get memories based on various criteria
+    /// </summary>
+    /// <param name="request">filter params </param>
+    /// <returns></returns>
+    /// <exception cref="HttpRequestException"></exception>
+    Task<GetMemoriesResponse?> GetMemories(GetMemoriesRequest request);
+
+    /// <summary>
+    /// Update an existing memory
+    /// </summary>
+    /// <param name="memoryId"></param>
+    /// <param name="request"></param>
+    /// <returns></returns>
+    /// <exception cref="HttpRequestException"></exception>
+    Task<UpdateMemoryResponse?> UpdateMemory(string memoryId, UpdateMemoryRequest request);
+
+    /// <summary>
+    /// batch update memories in Mem0
+    /// </summary>
+    /// <param name="request"></param>
+    /// <returns></returns>
+    /// <exception cref="HttpRequestException"></exception>
+    Task<string> BatchUpdateMemories(BatchUpdateMemoriesRequest request);
 }
 

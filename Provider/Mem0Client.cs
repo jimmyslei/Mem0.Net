@@ -102,7 +102,7 @@ public class Mem0Client : IMem0Client
     /// </summary>
     /// <param name="memoryId">ID of the memory to retrieve</param>
     /// <returns>Memory details</returns>
-    public async Task<MemoryInfoResponse?> GetMemoryAsync(string memoryId)
+    public async Task<MemoryInfoResponse?> GetMemoryByIdAsync(string memoryId)
     {
         var response = await _httpClient.GetAsync($"/v1/memories/{memoryId}");
 
@@ -136,6 +136,85 @@ public class Mem0Client : IMem0Client
             throw new HttpRequestException($"Failed to delete memory: {response.StatusCode}, {errorMessage}");
         }
     }
+
+    /// <summary>
+    /// Get memories based on various criteria
+    /// </summary>
+    /// <param name="request">filter params </param>
+    /// <returns></returns>
+    /// <exception cref="HttpRequestException"></exception>
+    public async Task<GetMemoriesResponse?> GetMemories(GetMemoriesRequest request)
+    {
+        var queryData = JsonSerializer.Deserialize<Dictionary<string,object>>(JsonSerializer.Serialize(request));
+        var response = await _httpClient.PostAsync($"/v2/memories?{BuildQueryString(queryData)}", null);
+        if (response.IsSuccessStatusCode)
+        {
+            return await response.Content.ReadFromJsonAsync<GetMemoriesResponse>(_jsonOptions);
+        }
+        else
+        {
+            var errorMessage = await response.Content.ReadAsStringAsync();
+            throw new HttpRequestException($"Failed to delete memory: {response.StatusCode}, {errorMessage}");
+        }
+    }
+
+    /// <summary>
+    /// Update an existing memory
+    /// </summary>
+    /// <param name="memoryId"></param>
+    /// <param name="request"></param>
+    /// <returns></returns>
+    /// <exception cref="HttpRequestException"></exception>
+    public async Task<UpdateMemoryResponse?> UpdateMemory(string memoryId, UpdateMemoryRequest request)
+    {
+        var requestContent = new StringContent(JsonSerializer.Serialize(request), Encoding.UTF8, "application/json");
+        var response = await _httpClient.PutAsync($"/v1/memories/{memoryId}", requestContent);
+        if (response.IsSuccessStatusCode)
+        {
+            return await response.Content.ReadFromJsonAsync<UpdateMemoryResponse>(_jsonOptions);
+        }
+        else
+        {
+            var errorMessage = await response.Content.ReadAsStringAsync();
+            throw new HttpRequestException($"Failed to update memory: {response.StatusCode}, {errorMessage}");
+        }
+    }
+
+    /// <summary>
+    /// batch update memories in Mem0
+    /// </summary>
+    /// <param name="request"></param>
+    /// <returns></returns>
+    /// <exception cref="HttpRequestException"></exception>
+    public async Task<string> BatchUpdateMemories(BatchUpdateMemoriesRequest request)
+    {
+        var requestContent = new StringContent(JsonSerializer.Serialize(request), Encoding.UTF8, "application/json");
+        var response = await _httpClient.PutAsync($"/v1/batch", requestContent);
+        if (response.IsSuccessStatusCode)
+        {
+            return await response.Content.ReadAsStringAsync();
+        }
+        else
+        {
+            var errorMessage = await response.Content.ReadAsStringAsync();
+            throw new HttpRequestException($"Failed to update memory: {response.StatusCode}, {errorMessage}");
+        }
+    }
+
+
+
+
+    #region 公共方法
+
+    private static string BuildQueryString(Dictionary<string, object> parameters)
+    {
+        if (!parameters.Any()) return string.Empty;
+
+        return string.Join("&", parameters.Select(kvp =>
+            $"{Uri.EscapeDataString(kvp.Key)}={Uri.EscapeDataString(kvp.Value?.ToString() ?? string.Empty)}"));
+    }
+
+    #endregion
 
 }
 
