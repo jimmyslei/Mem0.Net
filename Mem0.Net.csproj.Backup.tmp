@@ -4,7 +4,6 @@
     <TargetFrameworks>net6.0;net7.0;net8.0;net9.0;</TargetFrameworks>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <Title>Mem0.Net</Title>
     <Authors>jimmyLei</Authors>
     <Company>jimmy</Company>
     <Description>基于.net 封装的mem0Client SDK</Description>
@@ -14,7 +13,7 @@
     <RepositoryUrl>https://github.com/jimmyslei/Mem0.Net.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageReleaseNotes>发布封装mem0的C#操作方法</PackageReleaseNotes>
-    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <Title>Mem0.Net</Title>
     
   </PropertyGroup>
 
@@ -23,10 +22,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="LICENSE">
-      <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
-    </None>
     <None Update="README.md">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <Pack>True</Pack>
