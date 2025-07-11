@@ -30,13 +30,13 @@ jobs:
             8.0.x
 
       - name: Restore dependencies
-        run: dotnet restore 00-Share/Mem0.Net/Mem0.Net.csproj
+        run: dotnet restore Mem0.Net/Mem0.Net.csproj
 
       - name: Build
-        run: dotnet build 00-Share/Mem0.Net/Mem0.Net.csproj --configuration Release --no-restore
+        run: dotnet build Mem0.Net/Mem0.Net.csproj --configuration Release --no-restore
 
       - name: Pack
-        run: dotnet pack 00-Share/Mem0.Net/Mem0.Net.csproj --configuration Release --no-build --output ./nupkg
+        run: dotnet pack Mem0.Net/Mem0.Net.csproj --configuration Release --no-build --output ./nupkg
 
       - name: Publish to NuGet
         uses: actions/upload-artifact@v4
