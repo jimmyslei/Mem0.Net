@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Mem0.Net.Models;
 
-public class MemoryInfoResponse
+public class SearchMemoriesResponse
 {
     [JsonPropertyName("id")]
     public string Id { get; set; }
@@ -16,19 +16,16 @@ public class MemoryInfoResponse
     public string Memory { get; set; }
     [JsonPropertyName("user_id")]
     public string UserId { get; set; }
-    [JsonPropertyName("agent_id")]
-    public string AgentId { get; set; }
-    [JsonPropertyName("app_id")]
-    public string AppId { get; set; }
-    [JsonPropertyName("hash")]
-    public string Hash { get; set; }
+
+    [JsonPropertyName("categories")]
+    public List<string> Categories { get; set; }
+
+    [JsonPropertyName("created_at")]
+    public List<string> CreatedAt { get; set; }
+
+    [JsonPropertyName("updated_at")]
+    public List<string> UpdatedAt { get; set; }
 
     [JsonPropertyName("metadata")]
     public Dictionary<string, object> Metadata { get; set; }
-
-    [JsonPropertyName("created_at")]
-    public DateTime CreatedAt { get; set; }
-
-    [JsonPropertyName("updated_at")]
-    public DateTime UpdatedAt { get; set; }
 }

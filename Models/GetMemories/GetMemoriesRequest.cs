@@ -4,9 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Mem0.Net.Models.GetMemories
+namespace Mem0.Net.Models;
+
+internal class GetMemoriesRequest
 {
-    internal class GetMemoriesRequest
-    {
-    }
 }

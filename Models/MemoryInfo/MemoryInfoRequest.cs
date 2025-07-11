@@ -4,9 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Mem0.Net.Models.MemoryInfo
+namespace Mem0.Net.Models;
+
+internal class MemoryInfoRequest
 {
-    internal class MemoryInfoRequest
-    {
-    }
 }

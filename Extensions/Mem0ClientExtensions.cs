@@ -6,6 +6,11 @@ namespace Mem0.Net;
 
 public static class Mem0ClientExtensions
 {
+    /// <summary>
+    /// 注册 Mem0 客户端服务
+    /// </summary>
+    /// <param name="services"></param>
+    /// <returns></returns>
     public static IServiceCollection AddMem0Client(this IServiceCollection services)
     {
         services.AddOptions<Mem0Options>()
