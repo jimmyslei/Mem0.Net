@@ -29,6 +29,26 @@ jobs:
             7.0.x
             8.0.x
             9.0.x
+      - name: Set version variable
+        id: vars
+        run: echo "VERSION=${{ github.event.inputs.version }}" >> $GITHUB_ENV
+
+      - name: Create Tag
+        id: create_tag
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git tag v${{ env.VERSION }}
+          git push origin v${{ env.VERSION }}
+
+      - name: Create GitHub Release
+        id: create_release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ env.VERSION }}
+          name: Release v${{ env.VERSION }}
+          draft: false
+          prerelease: false
 
       - name: Restore dependencies
         run: dotnet restore Mem0.Net.csproj
