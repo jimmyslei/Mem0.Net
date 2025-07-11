@@ -1,39 +1,113 @@
 # Mem0.Net
 
-这是基于 .NET 封装的 Mem0Client SDK，方便在 .NET 项目中集成和调用 [Mem0](https://mem0.ai) 智能记忆服务的 API。
+[English](README.md) | [中文](README.zh-cn.md)
 
-## 特性
+A .NET wrapper SDK for Mem0Client that facilitates integration and API calls to the [Mem0](https://mem0.ai) intelligent memory service in .NET projects.
 
-- 支持 .NET 6.0、7.0、8.0、9.0
-- 封装 Mem0 API 的常用接口（增、查、删、改等）
-- 支持异步调用
-- 简单易用，便于集成
+## Features
 
-## 安装
+- Supports .NET 6.0, 7.0, 8.0, 9.0
+- Encapsulates common Mem0 API interfaces (CRUD operations)
+- Supports asynchronous calls
+- Simple and easy to integrate
 
-通过 NuGet 安装（发布后）：
+## Installation
+
+Install via NuGet (after release):
 
 ```shell
 dotnet add package Mem0.Net
 ```
 
-## 快速开始
+## Quick Start
+
+### 1. Dependency Injection Registration
+
+Register Mem0Client service in `Program.cs`:
+
+```csharp
+using Mem0.Net;
+
+var builder = WebApplication.CreateBuilder(args);
+
+// Register Mem0Client service
+builder.Services.AddMem0Client();
+
+var app = builder.Build();
+// ... other configurations
+```
+
+### 2. Configuration File Setup
+
+Add Mem0 configuration in `appsettings.json`:
+
+```json
+{
+  "Mem0": {
+    "ApiKey": "your-mem0-api-key",
+    "Endpoint": "https://api.mem0.ai",
+    "OrganizationId": "your-org-id",
+    "ProjectId": "your-project-id"
+  }
+}
+```
+
+### 3. Usage Example
 
 ```csharp
 using Mem0.Net;
 using Mem0.Net.Models;
 
-// 初始化客户端
+// Get client through dependency injection
+public class MyService
+{
+    private readonly IMem0Client _mem0Client;
+
+    public MyService(IMem0Client mem0Client)
+    {
+        _mem0Client = mem0Client;
+    }
+
+    public async Task UseMem0Client()
+    {
+        // Add memories
+        var addRequest = new AddMemoriesRequest
+        {
+            // Fill in request parameters
+        };
+        var addResponse = await _mem0Client.AddMemoriesAsync(addRequest);
+
+        // Search memories
+        var searchResults = await _mem0Client.SearchAsync("example", limit: 10);
+
+        // Get memory details
+        var memory = await _mem0Client.GetMemoryAsync("memoryId");
+
+        // Delete memory
+        var success = await _mem0Client.DeleteMemoryAsync("memoryId");
+    }
+}
+```
+
+### 4. Direct Usage (Not Recommended)
+
+If you don't want to use dependency injection, you can also instantiate directly:
+
+```csharp
+using Mem0.Net;
+using Mem0.Net.Models;
+
+// Initialize client
 var client = new Mem0Client("your-mem0-api-key");
 
-// 添加记忆
+// Add memories
 var addRequest = new AddMemoriesRequest
 {
-    // 填写请求参数
+    // Fill in request parameters
 };
 var addResponse = await client.AddMemoriesAsync(addRequest);
 
-// 搜索记忆
+// Search memories
 var searchRequest = new SearchRequest
 {
     Query = "example",
@@ -41,29 +115,29 @@ var searchRequest = new SearchRequest
 };
 var searchResults = await client.SearchAsync(searchRequest);
 
-// 获取记忆详情
+// Get memory details
 var memory = await client.GetMemoryAsync("memoryId");
 
-// 删除记忆
+// Delete memory
 var success = await client.DeleteMemoryAsync("memoryId");
 ```
 
-## 接口说明
+## API Reference
 
-- `AddMemoriesAsync(AddMemoriesRequest request)`：添加记忆
-- `SearchAsync(SearchRequest request)`：搜索记忆
-- `GetMemoryAsync(string memoryId)`：获取记忆详情
-- `DeleteMemoryAsync(string memoryId)`：删除记忆
-- ...（更多接口请参考源码和注释）
+- `AddMemoriesAsync(AddMemoriesRequest request)`: Add memories
+- `SearchAsync(SearchRequest request)`: Search memories
+- `GetMemoryAsync(string memoryId)`: Get memory details
+- `DeleteMemoryAsync(string memoryId)`: Delete memory
+- ... (For more APIs, please refer to source code and comments)
 
-## 配置
+## Configuration
 
-- **API Key**：请在 [Mem0 官网](https://mem0.ai) 获取你的 API Key。
-- **BaseUrl**：如需自定义服务地址，可在初始化时传入。
+- **API Key**: Please obtain your API Key from the [Mem0 official website](https://mem0.ai).
+- **BaseUrl**: If you need to customize the service address, you can pass it during initialization.
 
-## 贡献
+## Contributing
 
-欢迎提交 Issue 或 Pull Request 参与贡献！
+Welcome to submit Issues or Pull Requests to contribute!
 
 ## License
 
