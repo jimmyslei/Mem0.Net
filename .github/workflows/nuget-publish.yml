@@ -1,0 +1,50 @@
+name: Publish NuGet Package
+
+on:
+  release:
+    types: [published]
+  push:
+    tags:
+      - 'v*.*.*'
+      - '*.*.*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: '版本号 (例如: 1.0.0)'
+        required: true
+        type: string
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: |
+            6.0.x
+            7.0.x
+            8.0.x
+
+      - name: Restore dependencies
+        run: dotnet restore 00-Share/Mem0.Net/Mem0.Net.csproj
+
+      - name: Build
+        run: dotnet build 00-Share/Mem0.Net/Mem0.Net.csproj --configuration Release --no-restore
+
+      - name: Pack
+        run: dotnet pack 00-Share/Mem0.Net/Mem0.Net.csproj --configuration Release --no-build --output ./nupkg
+
+      - name: Publish to NuGet
+        uses: actions/upload-artifact@v4
+        with:
+          name: nupkg
+          path: ./nupkg/*.nupkg
+
+      - name: Push to NuGet.org
+        run: dotnet nuget push ./nupkg/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
+        env:
+          NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
