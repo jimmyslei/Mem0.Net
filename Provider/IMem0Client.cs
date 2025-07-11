@@ -57,6 +57,14 @@ public interface IMem0Client
     Task<GetMemoriesResponse?> GetMemories(GetMemoriesRequest request);
 
     /// <summary>
+    /// get memory history by memory ID
+    /// </summary>
+    /// <param name="memoryId"></param>
+    /// <returns></returns>
+    /// <exception cref="HttpRequestException"></exception>
+    Task<List<MemoryHistoryResponse>?> GetMemoryHistory(string memoryId);
+
+    /// <summary>
     /// Update an existing memory
     /// </summary>
     /// <param name="memoryId"></param>
@@ -72,5 +80,30 @@ public interface IMem0Client
     /// <returns></returns>
     /// <exception cref="HttpRequestException"></exception>
     Task<string> BatchUpdateMemories(BatchUpdateMemoriesRequest request);
+
+    /// <summary>
+    /// batch delete memories in Mem0
+    /// </summary>
+    /// <param name="memoryIds"></param>
+    /// <returns></returns>
+    /// <exception cref="HttpRequestException"></exception>
+    Task<string> BatchDeleteMemories(string[] memoryIds);
+
+    /// <summary>
+    /// delete memories based on criteria
+    /// </summary>
+    /// <param name="request"></param>
+    /// <returns></returns>
+    /// <exception cref="HttpRequestException"></exception>
+    Task<string> DeleteMemories(DeleteMemoriesRequest request);
+
+    /// <summary>
+    /// Submit feedback to the Mem0 service
+    /// </summary>
+    /// <param name="request"></param>
+    /// <returns></returns>
+    /// <exception cref="HttpRequestException"></exception>
+    Task<FeedbackResponse?> Feedback(FeedbackRequest request);
+
 }
 

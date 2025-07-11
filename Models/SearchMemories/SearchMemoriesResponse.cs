@@ -21,10 +21,10 @@ public class SearchMemoriesResponse
     public List<string> Categories { get; set; }
 
     [JsonPropertyName("created_at")]
-    public List<string> CreatedAt { get; set; }
+    public DateTime CreatedAt { get; set; }
 
     [JsonPropertyName("updated_at")]
-    public List<string> UpdatedAt { get; set; }
+    public DateTime UpdatedAt { get; set; }
 
     [JsonPropertyName("metadata")]
     public Dictionary<string, object> Metadata { get; set; }

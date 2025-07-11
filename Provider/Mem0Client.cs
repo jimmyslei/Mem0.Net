@@ -181,6 +181,26 @@ public class Mem0Client : IMem0Client
     }
 
     /// <summary>
+    /// get memory history by memory ID
+    /// </summary>
+    /// <param name="memoryId"></param>
+    /// <returns></returns>
+    /// <exception cref="HttpRequestException"></exception>
+    public async Task<List<MemoryHistoryResponse>?> GetMemoryHistory(string memoryId)
+    {
+        var response = await _httpClient.GetAsync($"/v1/memories/{memoryId}/history");
+        if (response.IsSuccessStatusCode)
+        {
+            return await response.Content.ReadFromJsonAsync<List<MemoryHistoryResponse>>(_jsonOptions);
+        }
+        else
+        {
+            var errorMessage = await response.Content.ReadAsStringAsync();
+            throw new HttpRequestException($"Failed to get memory history: {response.StatusCode}, {errorMessage}");
+        }
+    }
+
+    /// <summary>
     /// batch update memories in Mem0
     /// </summary>
     /// <param name="request"></param>
@@ -201,6 +221,73 @@ public class Mem0Client : IMem0Client
         }
     }
 
+    /// <summary>
+    /// batch delete memories in Mem0
+    /// </summary>
+    /// <param name="memoryIds"></param>
+    /// <returns></returns>
+    /// <exception cref="HttpRequestException"></exception>
+    public async Task<string> BatchDeleteMemories(string[] memoryIds)
+    {
+        var content = new StringContent(JsonSerializer.Serialize(new { memory_ids = memoryIds }), Encoding.UTF8, "application/json");
+        var request = new HttpRequestMessage(HttpMethod.Delete, "/v1/batch")
+        {
+            Content = content
+        };
+
+        var response = await _httpClient.SendAsync(request);
+        if (response.IsSuccessStatusCode)
+        {
+            return await response.Content.ReadAsStringAsync();
+        }
+        else
+        {
+            var errorMessage = await response.Content.ReadAsStringAsync();
+            throw new HttpRequestException($"Failed to delete memories: {response.StatusCode}, {errorMessage}");
+        }
+    }
+
+    /// <summary>
+    /// delete memories based on criteria
+    /// </summary>
+    /// <param name="request"></param>
+    /// <returns></returns>
+    /// <exception cref="HttpRequestException"></exception>
+    public async Task<string> DeleteMemories(DeleteMemoriesRequest request)
+    {
+        var queryData = JsonSerializer.Deserialize<Dictionary<string, object>>(JsonSerializer.Serialize(request));
+        var response = await _httpClient.DeleteAsync($"/v1/memories?{BuildQueryString(queryData)}");
+        if (response.IsSuccessStatusCode)
+        {
+            return await response.Content.ReadAsStringAsync();
+        }
+        else
+        {
+            var errorMessage = await response.Content.ReadAsStringAsync();
+            throw new HttpRequestException($"Failed to delete memories: {response.StatusCode}, {errorMessage}");
+        }
+    }
+
+    /// <summary>
+    /// Submit feedback to the Mem0 service
+    /// </summary>
+    /// <param name="request"></param>
+    /// <returns></returns>
+    /// <exception cref="HttpRequestException"></exception>
+    public async Task<FeedbackResponse?> Feedback(FeedbackRequest request)
+    {
+        var requestContent = new StringContent(JsonSerializer.Serialize(request), Encoding.UTF8, "application/json");
+        var response = await _httpClient.PostAsync($"/v1/feedback", requestContent);
+        if (response.IsSuccessStatusCode)
+        {
+            return await response.Content.ReadFromJsonAsync<FeedbackResponse>(_jsonOptions);
+        }
+        else
+        {
+            var errorMessage = await response.Content.ReadAsStringAsync();
+            throw new HttpRequestException($"Failed to submit feedback: {response.StatusCode}, {errorMessage}");
+        }
+    }
 
 
 
