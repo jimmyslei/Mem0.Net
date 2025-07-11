@@ -41,14 +41,14 @@ jobs:
       #     git tag v${{ env.VERSION }}
       #     git push origin v${{ env.VERSION }}
 
-      - name: Create GitHub Release
-        id: create_release
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: v${{ env.VERSION }}
-          name: Release v${{ env.VERSION }}
-          draft: false
-          prerelease: false
+      # - name: Create GitHub Release
+      #   id: create_release
+      #   uses: softprops/action-gh-release@v2
+      #   with:
+      #     tag_name: v${{ env.VERSION }}
+      #     name: Release v${{ env.VERSION }}
+      #     draft: false
+      #     prerelease: false
 
       - name: Restore dependencies
         run: dotnet restore Mem0.Net.csproj
