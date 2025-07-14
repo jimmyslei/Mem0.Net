@@ -69,22 +69,14 @@ jobs:
       - name: Pack
         run: dotnet pack Mem0.Net.csproj --configuration Release --no-build --output ./nupkg
 
-      - name: List generated packages
-        run: ls -la ./nupkg/
-
-      - name: Publish to NuGet
-        uses: actions/upload-artifact@v4
-        with:
-          name: nupkg
-          path: ./nupkg/*.nupkg
+      # - name: Publish to NuGet
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: nupkg
+      #     path: ./nupkg/*.nupkg
 
       - name: Push to NuGet.org
-        run: |
-          echo "Publishing packages to NuGet.org..."
-          for package in ./nupkg/*.nupkg; do
-            echo "Publishing: $package"
-            dotnet nuget push "$package" \
-              --api-key "${{ secrets.NUGET_API_KEY }}" \
-              --source https://api.nuget.org/v3/index.json \
-              --skip-duplicate
-          done
+        run: dotnet nuget push ./nupkg/*.nupkg \
+          --api-key "${{ secrets.NUGET_API_KEY }}" \
+          --source https://api.nuget.org/v3/index.json \
+          --skip-duplicate
