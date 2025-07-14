@@ -61,19 +61,19 @@ jobs:
       #     prerelease: false
 
       - name: Restore dependencies
-        run: dotnet restore Mem0.Net.csproj
+        run: dotnet restore
 
       - name: Build
-        run: dotnet build Mem0.Net.csproj --configuration Release --no-restore
+        run: dotnet build --configuration Release --no-restore
 
       - name: Pack
-        run: dotnet pack Mem0.Net.csproj --configuration Release --no-build --output ./nupkg
+        run: dotnet pack --configuration Release --no-build --output ./nupkg -p:PackageVersion=${{ github.event.inputs.version }}
 
-      - name: Publish to NuGet
-        uses: actions/upload-artifact@v4
-        with:
-          name: nupkg
-          path: ./nupkg/*.nupkg
+      # - name: Publish to NuGet
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: nupkg
+      #     path: ./nupkg/*.nupkg
 
       - name: Push to NuGet.org
         run: dotnet nuget push ./nupkg/*.nupkg --api-key "${{ secrets.NUGET_API_KEY }}"  --source https://api.nuget.org/v3/index.json --skip-duplicate
