@@ -69,11 +69,16 @@ jobs:
       - name: Pack
         run: dotnet pack --configuration Release --no-build --output ./nupkg -p:PackageVersion=${{ github.event.inputs.version }}
 
-      # - name: Publish to NuGet
-      #   uses: actions/upload-artifact@v4
-      #   with:
-      #     name: nupkg
-      #     path: ./nupkg/*.nupkg
+      - name: Publish to NuGet
+        uses: actions/upload-artifact@v4
+        with:
+          name: nupkg
+          path: ./nupkg/*.nupkg
+
+      - name: Add NuGet source
+        run: dotnet nuget add source https://api.nuget.org/v3/index.json --name nuget.org --username "any" --password "${{ secrets.NUGET_API_KEY }}" --store-password-in-clear-text
 
       - name: Push to NuGet.org
-        run: dotnet nuget push ./nupkg/*.nupkg --api-key "${{ secrets.NUGET_API_KEY }}"  --source https://api.nuget.org/v3/index.json --skip-duplicate
+        env:
+          NUGET_AUTH_TOKEN: ${{ secrets.NUGET_API_KEY }}
+        run: dotnet nuget push "./nupkg/*.nupkg" --api-key "${{ secrets.NUGET_API_KEY }}" --source "nuget.org" --skip-duplicate
