@@ -75,10 +75,5 @@ jobs:
           name: nupkg
           path: ./nupkg/*.nupkg
 
-      - name: Add NuGet source
-        run: dotnet nuget add source https://api.nuget.org/v3/index.json --name nuget.org --username "JimmyLei" --password "${{ secrets.NUGET_API_KEY }}" --store-password-in-clear-text
-
       - name: Push to NuGet.org
-        env:
-          NUGET_AUTH_TOKEN: ${{ secrets.NUGET_API_KEY }}
         run: dotnet nuget push "./nupkg/*.nupkg" --api-key "${{ secrets.NUGET_API_KEY }}" --source "nuget.org" --skip-duplicate
